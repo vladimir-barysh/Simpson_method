@@ -67,6 +67,7 @@ public class NumericIntegration {
             I_h = I_h2;
         } while (realEps > eps);
 
+        System.out.println("Количество шагов: " + n);
         return I_h2;
     }
 
