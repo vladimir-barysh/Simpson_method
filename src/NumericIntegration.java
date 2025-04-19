@@ -54,22 +54,30 @@ public class NumericIntegration {
         return h * sum / 3;
     }
 
-    //Метод для автоматического подбора числа разбиений с указанной точностью
+    // Метод для автоматического подбора числа разбиений с указанной точностью
     public static double rungeStep(int method, double a, double b, double eps, int m) {
-        int n = 4;
+        int n = 2;
+        double h = (b - a) / n;
+        double error;
         double I_h = integrate(method, a, b, n);
-        double I_h2, realEps;
+        n *= 2;
+        double I_h2 = integrate(method, a, b, n);
 
-        do {
+        h = h / 2;
+        error = Math.abs(I_h2 - I_h) / (Math.pow(2, m) - 1);
+
+        while(error > eps*h/(b-a)) {
             n *= 2;
-            I_h2 = integrate(method, a, b, n);
-            realEps = Math.abs(I_h2 - I_h) / (Math.pow(2, m) - 1);
             I_h = I_h2;
-        } while (realEps > eps);
+            I_h2 = integrate(method, a, b, n);
+            error = Math.abs(I_h2 - I_h) / (Math.pow(2, m) - 1);
+        }
 
         System.out.println("Количество шагов: " + n);
         return I_h2;
     }
+
+
 
     // Универсальный метод для вызова конкретного способа интегрирования
     public static double integrate(int method, double a, double b, int n) {
